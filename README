@@ -1,1 +1,13 @@
 README
+
+Game Noughts and Crosses (Tip Tap Toe)
+For Online University Hexlet.org
+
+The game have two mods:
+1) Player vs Player
+2) Player vs AI
+
+But...       
+1) Game	only one computer whitout network (In future network gmae will be realized)
+2) Ai is dumbass (In future will be make clever AI)
+
