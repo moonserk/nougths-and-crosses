@@ -1,28 +1,38 @@
 package com.noughtsandcrosses.users;
 
-import com.noughtsandcrosses.game.Field;
 
 import java.util.Random;
+
+import com.noughtsandcrosses.game.Field;
+
+
 
 
 public class Ai extends Users {
 	
-	private Field field = new Field();
-	
-	private char[][] controlField = new char[field.getFieldSize()][field.getFieldSize()];
-	
 	public Ai(char sign){
 		super("Albert", sign);
 	}
-
-
+	
 	//Artifical Intelligence =)
+	
+	
+	
+//	public void showFF(){
+//		controlField = field.returnField();
+//		for(int i = 0 ; i < field.getFieldSize() ; i++){
+//			for(int j = 0 ; j < field.getFieldSize() ; j++){
+//				System.out.print(controlField[i][j]);
+//			}
+//			System.out.println();
+//		}
+//	}
+	
 	
 	@Override
 	public int returnMoveCoordinates(){
-
-        Random random = new Random();
-        return  random.nextInt(3);
+		Random random = new Random();
+		return random.nextInt(3);
 	}
 	
 }

@@ -1,9 +1,10 @@
 package com.noughtsandcrosses.game;
 
+
 /**
  * Created by Gregory on 02.02.14.
  */
-public class Field{
+public class Field{ // Singleton
 
     private static final int FIELD_SIZE = 3;
 
@@ -11,38 +12,45 @@ public class Field{
 
     private static char[][] field = new char[FIELD_SIZE][FIELD_SIZE];
     
-    private char[] fieldCheckWin = new char[FIELD_SIZE];
+    private static char[] fieldCheckWin = new char[FIELD_SIZE];
     
-    private char signCheck;
+    private static char signCheck;
     
-
-	private boolean busy = true;
+	private static boolean busy = true;
+	
+	private static Field instance = new Field();
+	
+	private Field(){}
+	
+	public static Field getInstance(){
+		return instance;
+	}
     
     public static int getFieldSize() {
 		return FIELD_SIZE;
 	}
 
-	public boolean getBusy(){
+	public static boolean getBusy(){
     	return busy;
     }
     
-    public  void setBusy(boolean busy){
-    	this.busy = busy;
+    public static  void setBusy(boolean aBusy){
+    	busy = aBusy;
     }
     
-    public char getSignCheck(){
+    public static char getSignCheck(){
     	return signCheck;
     }
     
-    public void setSignCheck(char signCheck) {
-		this.signCheck = signCheck;
+    public static void setSignCheck(char aSignCheck) {
+    	signCheck = aSignCheck;
 	}
     
-    public char[][] returnField(){ // it's work  =)
+    public static char[][] returnField(){ // it's work  =)
     	return field;
     }
     
-    public void moveOn(int i, int j, char sign){
+    public static void moveOn(int i, int j, char sign){
     	if(field[i][j] == ' '){
     		field[i][j] = sign;
     		busy = false;
@@ -54,33 +62,43 @@ public class Field{
     }
     
 
-    public void clearField(){
+    public static void clearField(){
         for(int i = 0 ; i < FIELD_SIZE; i++){
             setLineForClear(i);
         }
     }
 
-    private void setLineForClear(int i){
+    private static void setLineForClear(int i){
         for(int j = 0 ; j < FIELD_SIZE ; j++ ){
             field[i][j] = CLEAR_CELL;
         }
     }
 
 
-    public void showField(){
+    public static void showField(){
         for(int i = 0 ; i < FIELD_SIZE; i++){
             setLineForShow(i);
+            
             System.out.println();               // New line
         }
     }
 
-    private void setLineForShow(int i){
+    private static void setLineForShow(int i){
         for(int j = 0 ; j < FIELD_SIZE ; j++ ){
             System.out.print("[" + field[i][j] + "]");
+            
         }
     }
     
-    private boolean checkField(){
+    public static String getLine(int i){ // Returned method for server/client
+        String line = "";
+    	for(int j = 0 ; j < FIELD_SIZE ; j++ ){
+             line += "[" + field[i][j] + "]";
+        }
+    	return line;
+    }
+    
+    private static boolean checkField(){
     	boolean win = false;
     	signCheck = fieldCheckWin[0];
     	for(int i = 1; i < FIELD_SIZE; i++){
@@ -97,10 +115,10 @@ public class Field{
     
     
     
-    private boolean checkHorizontalCombination(){
+    private static boolean checkHorizontalCombination(){
     	boolean win = false;
-    	for(int i = 0, j = 0 ; i < FIELD_SIZE ; i++, j = 0 ){
-    		for(; j < FIELD_SIZE ; j++){
+    	for(int i = 0 ; i < FIELD_SIZE ; i++ ){
+    		for(int j = 0; j < FIELD_SIZE ; j++){
     			fieldCheckWin[j] = field[i][j];
     		}
     		win = checkField();
@@ -111,10 +129,10 @@ public class Field{
 		return false;
     }
     
-    private boolean checkVerticalCombination(){
+    private static boolean checkVerticalCombination(){
     	boolean win = false;
-    	for(int i = 0, j = 0 ; i < FIELD_SIZE ; i++, j = 0 ){
-    		for(; i < FIELD_SIZE ; i++){
+    	for(int j = 0 ; j < FIELD_SIZE ; j++){
+    		for(int i = 0 ; i < FIELD_SIZE ; i++){
     			fieldCheckWin[i] = field[i][j];
     		}
     		win = checkField();
@@ -125,7 +143,7 @@ public class Field{
 		return false;
     }
     
-    public boolean check(){
+    public static boolean check(){
     	boolean win = false;
     	win = checkHorizontalCombination();
     	if(win == true){
@@ -146,7 +164,7 @@ public class Field{
 		return false;
     }
     
-    public boolean checkEmptyCells(){
+    public static boolean checkEmptyCells(){
     	final int allCells = FIELD_SIZE * FIELD_SIZE;
     	int notEmpty = 0;
 		for(int i = 0, j = 0 ; i < FIELD_SIZE ; i++, j = 0){
@@ -163,9 +181,9 @@ public class Field{
 		return false;
     }
     
-    private boolean checkDiagonalCombination_1(){
+    private static boolean checkDiagonalCombination_1(){
+    	clearFieldCheckWin();
     	boolean win = false;
-        clearCheckField();
     	for(int i = 0, j = 0 ; i < FIELD_SIZE ; i++, j++ ){
     		fieldCheckWin[i] = field[i][j];
     		win = checkField();
@@ -175,9 +193,10 @@ public class Field{
     	}
 		return false;
     }
-    private boolean checkDiagonalCombination_2(){
+    
+    private static boolean checkDiagonalCombination_2(){
+    	clearFieldCheckWin();
     	boolean win = false;
-        clearCheckField();
     	for(int i = 0, j = FIELD_SIZE - 1 ; i < FIELD_SIZE ; i++, j-- ){
     		fieldCheckWin[i] = field[i][j];
     		win = checkField();
@@ -187,12 +206,13 @@ public class Field{
     	}
 		return false;
     }
-
-    private void clearCheckField(){
-        for (int i = 0 ; ++i < FIELD_SIZE ;){
-            fieldCheckWin[i] = CLEAR_CELL;
-        }
+    
+    private static void clearFieldCheckWin(){
+    	for(int i = 0; i < FIELD_SIZE ; i++){
+    		fieldCheckWin[i] = ' ';
+    	}
     }
+
 }
 
 //KISS

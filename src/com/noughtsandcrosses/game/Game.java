@@ -1,7 +1,9 @@
 package com.noughtsandcrosses.game;
 
+
 import java.util.Scanner;
 
+import com.noughtsandcrosses.network.Server;
 import com.noughtsandcrosses.users.Ai;
 import com.noughtsandcrosses.users.Human;
 import com.noughtsandcrosses.users.Users;
@@ -15,20 +17,18 @@ public class Game{
 	
 	private Ai ai = new Ai(' ');
 	
-	private Field field;
-	
 	Scanner in = new Scanner(System.in);
 	
 	public void startGame(){
-		field = new Field();
-		field.clearField();
+		Field.getInstance();
+		Field.clearField();
 		
 		creatingGamers();
         System.out.println("Game STARTED");
-        field.showField();
+        Field.showField();
         System.out.print(gameWinner());
         
-        switch(field.getSignCheck()){
+        switch(Field.getSignCheck()){
         	
         	case 'X' : 
         		System.out.println(user1.getName());
@@ -45,44 +45,55 @@ public class Game{
 		String textWin = "Winner is ";
 		String deadHeat = "!!!Dead heat!!!";
         for(boolean finish = false ; finish != true ;){
-            for(; field.getBusy() == true ;){
-            	if(field.checkEmptyCells() == true){
-            		field.setSignCheck(' ');
+            for(; Field.getBusy() == true ;){
+            	if(Field.checkEmptyCells() == true){
+            		Field.setSignCheck(' ');
                 	return deadHeat;
                 }
             	move(user1);
             }
-            finish = field.check();
+            finish = Field.check();
             if(finish == true){
             	return textWin;
             }
-            field.setBusy(true);
+            Field.setBusy(true);
             
-            for(;field.getBusy() == true;){
-            	if(field.checkEmptyCells() == true){
-            		field.setSignCheck(' ');
+            for(;Field.getBusy() == true;){
+            	if(Field.checkEmptyCells() == true){
+            		Field.setSignCheck(' ');
                 	return deadHeat;
                 }
             	move(user2);
             }
-            finish = field.check();
+            finish = Field.check();
             if(finish == true){
             	return textWin;
             }
-            field.setBusy(true);
+            Field.setBusy(true);
         }
         return deadHeat;
 	}
+
+    private void lanGame(){
+        Server server =  new Server();
+        server.crateServer();
+    }
 	
 	private void creatingGamers(){
-		System.out.println("Select game mod: 1 - {Human vs. Human} 2 - (Human vs. AI)");
+		System.out.println("Select game mod: 1 - (Human vs. Human) 2 - (Human vs. AI)");
 		int gameMod = in.nextInt();
 		System.out.println("User one what your name?");
 		user1 = new Human(in.next(), 'X');
 		switch(gameMod){
 			case 1 :
-				System.out.println("User two what your name?");
-				user2 = new Human(in.next(), '0');
+                System.out.println("Select one computer or lan: 1 - (One computer) 2 - (LAN)");
+                if(in.nextInt() == 2){
+                    lanGame();
+                }
+                else{
+				    System.out.println("User two what your name?");
+				    user2 = new Human(in.next(), '0');
+                }
 				break;
 			case 2 : 
 				user2 = new Ai('0');
@@ -96,7 +107,7 @@ public class Game{
 	private void moveOn(Users user) {
 		System.out.println("Your turn " + user.getName());
 		try{
-			field.moveOn(user.returnMoveCoordinates(), user.returnMoveCoordinates(), user.getSign());
+			Field.moveOn(user.returnMoveCoordinates(), user.returnMoveCoordinates(), user.getSign());
 		}catch(ArrayIndexOutOfBoundsException e){
 			System.out.println("Miss");
 			moveOn(user);
@@ -105,7 +116,7 @@ public class Game{
 	
 	private void move(Users user){
 		moveOn(user);
-		field.showField();
+		Field.showField();
 		//ai.showFF(); /// /// check
 	}
 }
