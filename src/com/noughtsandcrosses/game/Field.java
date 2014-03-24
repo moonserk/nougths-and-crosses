@@ -77,20 +77,12 @@ public class Field{ // Singleton
 
     public static void showField(){
         for(int i = 0 ; i < FIELD_SIZE; i++){
-            setLineForShow(i);
-            
-            System.out.println();               // New line
+            System.out.println(getLine(i));      // New line
         }
     }
 
-    private static void setLineForShow(int i){
-        for(int j = 0 ; j < FIELD_SIZE ; j++ ){
-            System.out.print("[" + field[i][j] + "]");
-            
-        }
-    }
     
-    public static String getLine(int i){ // Returned method for server/client
+    public static String getLine(int i){
         String line = "";
     	for(int j = 0 ; j < FIELD_SIZE ; j++ ){
              line += "[" + field[i][j] + "]";

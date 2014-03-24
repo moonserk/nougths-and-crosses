@@ -29,6 +29,7 @@ public class Server {
 				for(int i = -1 ; ++i < Field.getFieldSize() ;){
 					out.println(Field.getLine(i));
 				}
+
 			}
 			finally{
 				incoming.close();

@@ -3,6 +3,7 @@ package com.noughtsandcrosses.game;
 
 import java.util.Scanner;
 
+import com.noughtsandcrosses.network.Client;
 import com.noughtsandcrosses.network.Server;
 import com.noughtsandcrosses.users.Ai;
 import com.noughtsandcrosses.users.Human;
@@ -47,7 +48,7 @@ public class Game{
         for(boolean finish = false ; finish != true ;){
             for(; Field.getBusy() == true ;){
             	if(Field.checkEmptyCells() == true){
-            		Field.setSignCheck(' ');
+            		//Field.setSignCheck(' ');
                 	return deadHeat;
                 }
             	move(user1);
@@ -60,7 +61,7 @@ public class Game{
             
             for(;Field.getBusy() == true;){
             	if(Field.checkEmptyCells() == true){
-            		Field.setSignCheck(' ');
+            		//Field.setSignCheck(' ');
                 	return deadHeat;
                 }
             	move(user2);
@@ -75,9 +76,23 @@ public class Game{
 	}
 
     private void lanGame(){
-        Server server =  new Server();
-        server.crateServer();
+        System.out.println("Select network mod: 1 - (Server) 2 - (Client)");
+        switch(in.nextInt()){
+            case 1:
+                Server server = new Server();
+                server.crateServer();
+                break;
+            case 2:
+                Client client =  new Client();
+                client.createClient();
+                break;
+            default:
+                lanGame();
+                break;
+        }
+
     }
+
 	
 	private void creatingGamers(){
 		System.out.println("Select game mod: 1 - (Human vs. Human) 2 - (Human vs. AI)");
