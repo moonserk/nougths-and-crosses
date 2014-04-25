@@ -2,9 +2,6 @@ package com.noughtsandcrosses.game;
 
 
 import java.util.Scanner;
-
-import com.noughtsandcrosses.network.Client;
-import com.noughtsandcrosses.network.Server;
 import com.noughtsandcrosses.users.Ai;
 import com.noughtsandcrosses.users.Human;
 import com.noughtsandcrosses.users.Users;
@@ -13,13 +10,27 @@ import com.noughtsandcrosses.users.Users;
  * Created by Gregory on 02.02.14.
  */
 public class Game{
-	private Users user1;
-	private Users user2;
-	
-	private Ai ai = new Ai(' ');
+	protected Users user1;
+	protected Users user2;
 	
 	Scanner in = new Scanner(System.in);
-	
+
+    public void endGame(){
+        System.out.print(gameWinner());
+
+        switch(Field.getSignCheck()){
+
+            case 'X' :
+                System.out.println(user1.getName());
+                break;
+            case '0' :
+                System.out.println(user2.getName());
+                break;
+            case ' ' :
+                System.out.println();
+        }
+    }
+
 	public void startGame(){
 		Field.getInstance();
 		Field.clearField();
@@ -27,22 +38,11 @@ public class Game{
 		creatingGamers();
         System.out.println("Game STARTED");
         Field.showField();
-        System.out.print(gameWinner());
-        
-        switch(Field.getSignCheck()){
-        	
-        	case 'X' : 
-        		System.out.println(user1.getName());
-        		break;
-        	case '0' :
-        		System.out.println(user2.getName());
-        		break;
-        	case ' ' :
-        		System.out.println();
-        }
+
+        endGame();
 	}
 	
-	private String gameWinner(){
+	public String gameWinner(){
 		String textWin = "Winner is ";
 		String deadHeat = "!!!Dead heat!!!";
         for(boolean finish = false ; finish != true ;){
@@ -74,41 +74,16 @@ public class Game{
         }
         return deadHeat;
 	}
-
-    private void lanGame(){
-        System.out.println("Select network mod: 1 - (Server) 2 - (Client)");
-        switch(in.nextInt()){
-            case 1:
-                Server server = new Server();
-                server.crateServer();
-                break;
-            case 2:
-                Client client =  new Client();
-                client.createClient();
-                break;
-            default:
-                lanGame();
-                break;
-        }
-
-    }
-
 	
-	private void creatingGamers(){
+	public void creatingGamers(){
 		System.out.println("Select game mod: 1 - (Human vs. Human) 2 - (Human vs. AI)");
 		int gameMod = in.nextInt();
 		System.out.println("User one what your name?");
 		user1 = new Human(in.next(), 'X');
 		switch(gameMod){
 			case 1 :
-                System.out.println("Select one computer or lan: 1 - (One computer) 2 - (LAN)");
-                if(in.nextInt() == 2){
-                    lanGame();
-                }
-                else{
-				    System.out.println("User two what your name?");
-				    user2 = new Human(in.next(), '0');
-                }
+			    System.out.println("User two what your name?");
+			    user2 = new Human(in.next(), '0');
 				break;
 			case 2 : 
 				user2 = new Ai('0');
@@ -119,7 +94,7 @@ public class Game{
 		}
 	}
 
-	private void moveOn(Users user) {
+	public void moveOn(Users user) {
 		System.out.println("Your turn " + user.getName());
 		try{
 			Field.moveOn(user.returnMoveCoordinates(), user.returnMoveCoordinates(), user.getSign());
@@ -129,9 +104,8 @@ public class Game{
 		}
 	}
 	
-	private void move(Users user){
+	public void move(Users user){
 		moveOn(user);
 		Field.showField();
-		//ai.showFF(); /// /// check
 	}
 }

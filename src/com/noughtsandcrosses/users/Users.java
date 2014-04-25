@@ -2,6 +2,7 @@ package com.noughtsandcrosses.users;
 
 
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -32,6 +33,12 @@ public abstract class Users {
     }
     
     public int returnMoveCoordinates(){
-    	return in.nextInt();
+    	try {
+            return in.nextInt();
+        }catch(InputMismatchException e){
+          System.out.println("Only numbers");
+          returnMoveCoordinates();
+        }
+        return 0;
     }
 }

@@ -9,33 +9,120 @@ import java.net.Socket;
 import java.util.Scanner;
 
 import com.noughtsandcrosses.game.Field;
+import com.noughtsandcrosses.game.NetworkGame;
 
 public class Server {
-	
+
+    private ServerSocket server;
+    private InputStream inStream;
+    private OutputStream outStream;
+    private Scanner in;
+    private PrintWriter out;
+    private Socket incoming;
+
+    private static boolean flag = false;
+
+    public static boolean isFlag() {
+        return flag;
+    }
+
+    public static void setFlag(boolean aFlag) {
+        flag = aFlag;
+    }
+
 	public void crateServer(){
 		try{
 		
-			ServerSocket server = new ServerSocket(8912);
-			Socket incoming = server.accept();
-		
-			try{
-			
-				InputStream inStream = incoming.getInputStream();
-				OutputStream outStream = incoming.getOutputStream();
-			
-				Scanner in = new Scanner(inStream);
-				PrintWriter out = new PrintWriter(outStream, true);
-				
-				for(int i = -1 ; ++i < Field.getFieldSize() ;){
-					out.println(Field.getLine(i));
-				}
+			server = new ServerSocket(8912);
 
-			}
-			finally{
-				incoming.close();
-			}
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 	}
+
+    public void showStreamMessage(String s){
+
+        try{
+            incoming = server.accept();
+
+            try{
+                outStream = incoming.getOutputStream();
+                out = new PrintWriter(outStream, true);
+
+                out.println(s);
+
+            }
+            finally{
+                incoming.close();
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void showStreamField(){
+
+        try{
+            incoming = server.accept();
+
+            try{
+                outStream = incoming.getOutputStream();
+                out = new PrintWriter(outStream, true);
+
+                for(int i = 0 ; i < Field.getFieldSize() ; i++) {
+                    out.println(Field.getLine(i));
+                }
+
+            }
+            finally{
+                incoming.close();
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public int getStreamCoordinates(){
+        setFlag(true);
+        try{
+            incoming = server.accept();
+
+            try{
+
+                inStream = incoming.getInputStream();
+                in = new Scanner(inStream);
+
+                return in.nextInt();
+
+            }
+            finally{
+                incoming.close();
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public String getStreamMessage(){
+        setFlag(true);
+        try{
+            incoming = server.accept();
+
+            try{
+
+                inStream = incoming.getInputStream();
+                in = new Scanner(inStream);
+
+                return in.nextLine();
+
+            }
+            finally{
+                incoming.close();
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
