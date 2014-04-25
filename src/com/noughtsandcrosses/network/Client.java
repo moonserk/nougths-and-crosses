@@ -1,45 +1,79 @@
 package com.noughtsandcrosses.network;
 
-import com.noughtsandcrosses.game.NetworkGame;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
-    static Scanner input = new Scanner(System.in);
+    Scanner input = new Scanner(System.in);
+    InputStream inStream;
+    OutputStream outStream;
+    PrintWriter out;
 
-    public static void createClient(){
+    Scanner in;
+    Socket client;
 
-		try{
-			Socket client = new Socket("127.0.0.1", 8912);
-			
-			try{
-				InputStream inStream = client.getInputStream();
-                OutputStream outStream = client.getOutputStream();
-                Scanner in = new Scanner(inStream);
-                PrintWriter out = new PrintWriter(outStream, true);
+    public  void createClient() {
 
-                if(Server.isFlag() == true) {
-                    out.println(in.nextLine());
-                    Server.setFlag(false);
-                    out.close();
+        try {
+             //client = new Socket("127.0.0.1", 8912);
+
+            try {
+
+                fromServer();
+                fromServer();
+                toServer();
+                fromServer();
+                fromServer();
+
+                while(client.isConnected()){
+                    toServer();
+                    toServer();
+                    fromServer();
+                    fromServer();
+                    fromServer();
                 }
 
-                while(in.hasNext()) {
-                    System.out.println(in.nextLine());
-                }
 
-                Client.createClient();
 
-			}
-			finally{
-				client.close();
-			}
-		}catch(IOException e){
-			System.out.println("Disconnect");
-		}
-		
-	}
-	
+            } finally {
+                client.close();
+            }
+        } catch (IOException e) {
+            System.out.println("Disconnect");
+        }
+
+    }
+
+    public void fromServer(){
+        try {
+            client = new Socket("127.0.0.1", 8912);
+            try{
+            inStream = client.getInputStream();
+            in = new Scanner(inStream);
+            while (in.hasNext()) {
+                System.out.println(in.nextLine());
+            }
+            }finally{
+                client.close();
+            }
+        }catch (IOException e) {
+            System.out.println("Disconnect");
+        }
+
+    }
+
+    public void toServer(){
+        try {
+            client = new Socket("127.0.0.1", 8912);
+            outStream = client.getOutputStream();
+            out = new PrintWriter(outStream, true);
+            out.println(input.nextLine());
+            //out.flush();
+
+        } catch (IOException e) {
+                System.out.println("Disconnect");
+        }
+    }
 }

@@ -12,22 +12,21 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         System.out.println("Tic tap toe");
         System.out.println("Choose game mod : 1 - (Single) 2 - (Lan)");
-        switch(in.nextInt()){
-            case 1 :
+        switch (in.nextInt()) {
+            case 1:
                 Game game = new Game();
                 game.startGame();
                 break;
-            case 2 :
+            case 2:
                 System.out.println("Choose game mod : 1 - (Server) 2 - (Client)");
-                if(in.nextInt() == 2){
+                if (in.nextInt() == 2) {
                     Client client = new Client();
                     client.createClient();
-                }
-                else {
+                } else {
                     NetworkGame networkGame = new NetworkGame();
                     networkGame.startGame();
                 }
@@ -35,5 +34,5 @@ public class Main {
             default:
                 System.out.println("Go away");
         }
-    }	
+    }
 }

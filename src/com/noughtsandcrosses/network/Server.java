@@ -20,107 +20,91 @@ public class Server {
     private PrintWriter out;
     private Socket incoming;
 
-    private static boolean flag = false;
+    public void crateServer() {
+        try {
 
-    public static boolean isFlag() {
-        return flag;
+            server = new ServerSocket(8912);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void setFlag(boolean aFlag) {
-        flag = aFlag;
-    }
+    public void showStreamMessage(String s) {
 
-	public void crateServer(){
-		try{
-		
-			server = new ServerSocket(8912);
-
-		}catch(IOException e){
-			e.printStackTrace();
-		}
-	}
-
-    public void showStreamMessage(String s){
-
-        try{
+        try {
             incoming = server.accept();
 
-            try{
+            try {
                 outStream = incoming.getOutputStream();
                 out = new PrintWriter(outStream, true);
 
                 out.println(s);
 
-            }
-            finally{
+            } finally {
                 incoming.close();
             }
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void showStreamField(){
+    public void showStreamField() {
 
-        try{
+        try {
             incoming = server.accept();
 
-            try{
+            try {
                 outStream = incoming.getOutputStream();
                 out = new PrintWriter(outStream, true);
 
-                for(int i = 0 ; i < Field.getFieldSize() ; i++) {
+                for (int i = 0; i < Field.getFieldSize(); i++) {
                     out.println(Field.getLine(i));
                 }
 
-            }
-            finally{
+            } finally {
                 incoming.close();
             }
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public int getStreamCoordinates(){
-        setFlag(true);
-        try{
+    public int getStreamCoordinates() {
+        try {
             incoming = server.accept();
 
-            try{
+            try {
 
                 inStream = incoming.getInputStream();
                 in = new Scanner(inStream);
 
                 return in.nextInt();
 
-            }
-            finally{
+            } finally {
                 incoming.close();
             }
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return 0;
     }
 
-    public String getStreamMessage(){
-        setFlag(true);
-        try{
+    public String getStreamMessage() {
+        try {
             incoming = server.accept();
 
-            try{
+            try {
 
                 inStream = incoming.getInputStream();
                 in = new Scanner(inStream);
 
                 return in.nextLine();
 
-            }
-            finally{
+            } finally {
                 incoming.close();
             }
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
